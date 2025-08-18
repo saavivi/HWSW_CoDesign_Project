@@ -1,6 +1,6 @@
 import json
 import sys
-
+import orjson
 import pyperf
 
 
@@ -22,16 +22,21 @@ class JsonWrapper():
         object_id = id(obj)
         if object_id in self.cache:
             return self.cache[object_id]
-        result = json.dumps(obj)
+        result = orjson.dumps(obj)
+        # result = json.dumps(obj)
         self.cache[object_id] = result
         return result
+    
+
 def bench_json_dumps(data):
     wrapper = JsonWrapper()
     for obj, count_it in data:
+        wrapper.cache.clear()
         for _ in count_it:
             wrapper.dumps(obj)
-    a = 1
+            # orjson.dumps(obj)
             # json.dumps(obj)
+
 
 
 def add_cmdline_args(cmd, args):
